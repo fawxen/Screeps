@@ -13,8 +13,8 @@ var roleManager = {
     creepCount: {
         harvesters: 6,
         runners: 0,
-        builders: 3,
-        upgraders: 3
+        builders: 1,
+        upgraders: 5
     },
 
     run: function() {

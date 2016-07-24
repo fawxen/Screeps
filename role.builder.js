@@ -13,6 +13,7 @@ var roleBuilder = {
         if(creep.memory.building) {
             var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
             
+            /*
             var repairableTargets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_WALL) && structure.hits < 100000;
@@ -24,8 +25,8 @@ var roleBuilder = {
                     creep.moveTo(repairableTargets[0]);
                 }
             }
+            */
             
-            /*
             if(targets.length) {
                 for(i = 0; i < targets.length; i++) {
                     if(targets[i].structureType == STRUCTURE_WALL) {
@@ -39,7 +40,6 @@ var roleBuilder = {
                     creep.moveTo(targets[0]);
                 }
             }
-            */
         }
         else {
             var sources = creep.room.find(FIND_SOURCES);

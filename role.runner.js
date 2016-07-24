@@ -1,6 +1,5 @@
 var roleRunner = {
 
-    /** @param {Creep} creep **/
     run: function(creep) {
         if(creep.carry.energy == 0) {
             var containers = creep.room.find(FIND_STRUCTURES, {

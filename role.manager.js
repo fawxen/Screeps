@@ -3,63 +3,37 @@ var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRunner = require('role.runner');
 
-var harvesterParts = [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE];
-var runnerParts = [CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE];
-var builderParts = [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE];
-var upgraderParts = [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE];
-
 var roleManager = {
+
+    creepCountTotal: 12,
     
     creepCount: {
         harvesters: 6,
         runners: 0,
         builders: 1,
-        upgraders: 5
+        upgraders: 6
     },
+
+    creepParts: {
+        harvester: [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE],
+        runner: [CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE],
+        builder: [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE],
+        upgrader: [WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE]
+    }
+
+    creepRoles: [
+        'harvester',
+        'runner',
+        'builder',
+        'upgrader'
+    ],
 
     run: function() {
         this._wipeCreepMemory();
 
-        var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-        
-        if(harvesters.length < 6) {
-            var newName = Game.spawns['MotherShip'].createCreep(harvesterParts, undefined, {role: 'harvester'});
-        }
-        
-        var runners = _.filter(Game.creeps, (creep) => creep.memory.role == 'runner');
-        
-        if(runners.length < 0) {
-            var newName = Game.spawns['MotherShip'].createCreep(runnerParts, undefined, {role: 'runner'});
-        }
-        
-        var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-        
-        if(builders.length < 5) {
-            var newName = Game.spawns['MotherShip'].createCreep(builderParts, undefined, {role: 'builder'});
-        }
-        
-        var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-        
-        if(upgraders.length < 3) {
-            var newName = Game.spawns['MotherShip'].createCreep(upgraderParts, undefined, {role: 'upgrader'});
-        }
+        this._spawnCreep();
 
-        for(var name in Game.creeps) {
-            var creep = Game.creeps[name];
-            
-            if(creep.memory.role == 'runner') {
-                roleRunner.run(creep);
-            }
-            if(creep.memory.role == 'harvester') {
-                roleHarvester.run(creep);
-            }
-            if(creep.memory.role == 'upgrader') {
-                roleUpgrader.run(creep);
-            }
-            if(creep.memory.role == 'builder') {
-                roleBuilder.run(creep);
-            }
-        }
+        this._doWork();
     },
     
     _wipeCreepMemory: function() {
@@ -71,7 +45,65 @@ var roleManager = {
     },
     
     _spawnCreep: function() {
-        // var newName = Game.spawns['MotherShip'].createCreep(harvesterParts, undefined, {role: 'harvester'});
+        var roleToSpawn;
+        var partsToSpawn;
+
+        var creepsAlive = _.filter(Game.creeps);
+
+        if(creepsAlive < this.creepCountTotal) {
+            for(i = 0; i < this.creepRoles.length; i++) {
+                var creepsAliveByRoles = _.filter(Game.creeps, (creep) => creep.memory.role == this.creepRoles[i]);
+
+                if(this.creepRoles[i] == 'harvester') {
+                    if(creepsAliveByRoles.length < this.creepCount.harvesters) {
+                        roleToSpawn = this.creepRoles[i];
+                        partsToSpawn = this.creepParts.harvester;
+                    }
+                }
+                else if(this.creepRoles[i] == 'runner') {
+                    if(creepsAliveByRoles.length < this.creepCount.runners) {
+                        roleToSpawn = this.creepRoles[i];
+                        partsToSpawn = this.creepParts.runner;
+                    }
+                }
+                else if(this.creepRoles[i] == 'builder') {
+                    if(creepsAliveByRoles.length < this.creepCount.builders) {
+                        roleToSpawn = this.creepRoles[i];
+                        partsToSpawn = this.creepParts.builder;
+                    }
+                }
+                else if(this.creepRoles[i] == 'upgrader') {
+                    if(creepsAliveByRoles.length < this.creepCount.upgraders) {
+                        roleToSpawn = this.creepRoles[i];
+                        partsToSpawn = this.creepParts.upgrader;
+                    }
+                }
+            }
+
+            var newCreep = Game.spawns['MotherShip'].createCreep(partsToSpawn, undefined, {role: roleToSpawn});
+        }
+    },
+
+    _doWork: function() {
+        for(var name in Game.creeps) {
+            var creep = Game.creeps[name];
+
+            if(creep.memory.role == 'harvester') {
+                roleHarvester.run(creep);
+            }
+            
+            if(creep.memory.role == 'runner') {
+                roleRunner.run(creep);
+            }
+
+            if(creep.memory.role == 'builder') {
+                roleBuilder.run(creep);
+            }
+
+            if(creep.memory.role == 'upgrader') {
+                roleUpgrader.run(creep);
+            }
+        }
     }
 };
 

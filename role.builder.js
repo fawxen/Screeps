@@ -1,52 +1,58 @@
 var roleBuilder = {
 
     run: function(creep) {
+        this._determineTask(creep);
+    },
 
-        if(creep.memory.building && creep.carry.energy == 0) {
-            creep.memory.building = false;
+    _determineTask: function(creep) {
+        if(creep.memory.task == 'harvest' && creep.carry.energy != creep.carryCapacity) {
+            this._harvest(creep);
         }
-        
-        if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.building = true;
-        }
-
-        if(creep.memory.building) {
-            var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-            
-            /*
-            var repairableTargets = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_WALL) && structure.hits < 100000;
-                }
-            });
-            
-            if(repairableTargets.length) {
-                if(creep.repair(repairableTargets[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(repairableTargets[0]);
-                }
-            }
-            */
-            
-            if(targets.length) {
-                for(i = 0; i < targets.length; i++) {
-                    if(targets[i].structureType == STRUCTURE_WALL) {
-                        if(creep.build(targets[i]) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(targets[i]);
-                        }
-                    }
-                }
-                
-                if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0]);
-                }
-            }
+        else if(creep.memory.task == 'build') {
+            this._buildStructures(creep);
         }
         else {
-            var sources = creep.room.find(FIND_SOURCES);
-            
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0]);
+            this._repairStructures(creep);
+        }
+    },
+
+    _harvest: function(creep) {
+        var sources = creep.room.find(FIND_SOURCES);
+    
+        if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(sources[0]);
+        }
+    },
+
+    _buildStructures: function(creep) {
+        var target = creep.room.find(FIND_CONSTRUCTION_SITES);
+
+        if(target.length && creep.carryCapacity != 0) {
+            if(creep.build(target[0]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target[0]);
             }
+        } else {
+            creep.memory.task = 'harvest';
+        }
+    },
+
+     _repairStructures: function(creep) {
+        var target = creep.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_ROAD) && structure.hits < 2000;
+            }
+        });
+
+        if(creep.carryCapacity != 0) {
+            if(target.length) {
+                if(creep.repair(target[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target[0]);
+                }
+            } else {
+                creep.memory.task = 'build';
+            }
+        } else {
+            creep.memory.task = 'harvest';
         }
     }
 };

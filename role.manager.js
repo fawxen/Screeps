@@ -49,6 +49,7 @@ var roleManager = {
         var roleToSpawn;
         var partsToSpawn;
 
+        // TODO: move this to manager.game once it's created.
         var creepsAlive = _.filter(Game.creeps);
 
         if(creepsAlive.length < this.creepCountTotal) {

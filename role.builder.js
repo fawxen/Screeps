@@ -43,7 +43,7 @@ var roleBuilder = {
             }
         });
 
-        if(creep.carryCapacity != 0) {
+        if(creep.carry.energy != 0) {
             if(target.length) {
                 if(creep.repair(target[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target[0]);

@@ -13,20 +13,21 @@ var roleManager = {
         builders: 1,
         upgraders: 6
     },
-
-    creepParts: {
-        harvester: [WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
-        runner: [CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE],
-        builder: [WORK,WORK,CARRY,CARRY,MOVE,MOVE],
-        upgrader: [WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
+    
+    creepProps: {
+        roles: [
+            'harvester',
+            'runner',
+            'builder',
+            'upgrader'
+        ],
+        parts: {
+            harvester: [WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
+            runner: [CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE],
+            builder: [WORK,WORK,CARRY,CARRY,MOVE,MOVE],
+            upgrader: [WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
+        }
     },
-
-    creepRoles: [
-        'harvester',
-        'runner',
-        'builder',
-        'upgrader'
-    ],
 
     run: function() {
         this._wipeCreepMemory();
@@ -51,32 +52,31 @@ var roleManager = {
         var creepsAlive = _.filter(Game.creeps);
 
         if(creepsAlive.length < this.creepCountTotal) {
-            for(i = 0; i < this.creepRoles.length; i++) {
-                console.log("test");
-                var creepsAliveByRoles = _.filter(Game.creeps, (creep) => creep.memory.role == this.creepRoles[i]);
+            for(i = 0; i < this.creepProps.roles.length; i++) {
+                var creepsAliveByRoles = _.filter(Game.creeps, (creep) => creep.memory.role == this.creepProps.roles[i]);
 
-                if(this.creepRoles[i] == 'harvester') {
+                if(this.creepProps.roles[i] == 'harvester') {
                     if(creepsAliveByRoles.length < this.creepCount.harvesters) {
-                        partsToSpawn = this.creepParts.harvester;
-                        roleToSpawn = this.creepRoles[i];
+                        partsToSpawn = this.creepProps.parts.harvester;
+                        roleToSpawn = this.creepProps.roles[i];
                     }
                 }
-                else if(this.creepRoles[i] == 'runner') {
+                else if(this.creepProps.roles[i] == 'runner') {
                     if(creepsAliveByRoles.length < this.creepCount.runners) {
-                        partsToSpawn = this.creepParts.runner;
-                        roleToSpawn = this.creepRoles[i];
+                        partsToSpawn = this.creepProps.parts.runner;
+                        roleToSpawn = this.creepProps.roles[i];
                     }
                 }
-                else if(this.creepRoles[i] == 'builder') {
+                else if(this.creepProps.roles[i] == 'builder') {
                     if(creepsAliveByRoles.length < this.creepCount.builders) {
-                        partsToSpawn = this.creepParts.builder;
-                        roleToSpawn = this.creepRoles[i];
+                        partsToSpawn =this.creepProps.parts.builder;
+                        roleToSpawn = this.creepProps.roles[i];
                     }
                 }
-                else if(this.creepRoles[i] == 'upgrader') {
+                else if(this.creepProps.roles[i] == 'upgrader') {
                     if(creepsAliveByRoles.length < this.creepCount.upgraders) {
-                        partsToSpawn = this.creepParts.upgrader;
-                        roleToSpawn = this.creepRoles[i];
+                        partsToSpawn = this.creepProps.parts.upgrader;
+                        roleToSpawn = this.creepProps.roles[i];
                     }
                 }
             }

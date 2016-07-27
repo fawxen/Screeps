@@ -2,18 +2,24 @@ var managerTasks = {
     
     harvest: function(creep) {
         var sources = creep.room.find(FIND_SOURCES);
-    
-        if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(sources[0]);
+        
+        if(creep.carry.energy < creep.carryCapacity) {
+            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(sources[0]);
+            }
+        } else {
+            creep.memory.task = 'build';
         }
     },
 
     build: function(creep) {
+        // not ideal, but I wanted to prioritize.
         var targets = creep.room.find(FIND_CONSTRUCTION_SITES, {
             filter: (structure) => {
                 return (//structure.structureType == STRUCTURE_STORAGE ||
                         structure.structureType == STRUCTURE_EXTENSION ||
                         structure.structureType == STRUCTURE_WALL ||
+                        structure.structureType == STRUCTURE_TOWER ||
                         structure.structureType == STRUCTURE_ROAD);
             }
         });
@@ -32,7 +38,27 @@ var managerTasks = {
             creep.memory.task = 'upgrade';
         }
     },
-
+    
+    upgrade: function(creep) {
+        if(creep.carry.energy > 0) {
+            creep.memory.task = 'upgrade';
+            
+            if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller);
+            }
+        } else {
+            creep.memory.task = 'harvest';
+        }
+    },
+    
+    retrieve: function(creep) {
+        // do the stuffz
+    },
+    
+    deposit: function(creep) {
+        // do the stuffz
+    }
+    
     /*
 
     // our tower does the repairing now.
@@ -63,18 +89,6 @@ var managerTasks = {
     },
 
     */
-    
-    retrieve: function(creep) {
-        // do stuffz
-    },
-    
-    deposit: function(creep) {
-        // do stuffz
-    },
-    
-    upgrade: function(creep) {
-        // do stuffz
-    }
 };
 
 module.exports = managerTasks;

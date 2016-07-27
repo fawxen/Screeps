@@ -8,18 +8,12 @@ var roleBuilder = {
         if(creep.memory.task == 'harvest' && creep.carry.energy < creep.carryCapacity) {
             this._harvest(creep);
         }
-        else {
-            this._buildStructures(creep);
-        }
-        
-        /*
         else if(creep.memory.task == 'build') {
             this._buildStructures(creep);
         }
         else {
-            this._repairStructures(creep);
+            this._upgrade(creep);
         }
-        */
     },
 
     _harvest: function(creep) {
@@ -40,14 +34,18 @@ var roleBuilder = {
             }
         });
 
-        if(targets.length && creep.carry.energy > 0) {
-            creep.memory.task = 'build';
-            
-            if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[0]);
+        if(targets.length) {
+            if(creep.carry.energy > 0) {
+                creep.memory.task = 'build';
+                
+                if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(targets[0]);
+                }
+            } else {
+                creep.memory.task = 'harvest';
             }
         } else {
-            creep.memory.task = 'harvest';
+            creep.memory.task = 'upgrade';
         }
     },
 
@@ -69,6 +67,16 @@ var roleBuilder = {
                 }
             } else {
                 creep.memory.task = 'build';
+            }
+        } else {
+            creep.memory.task = 'harvest';
+        }
+    },
+    
+    _upgrade: function(creep) {
+        if(creep.carry.energy > 0) {
+            if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller);
             }
         } else {
             creep.memory.task = 'harvest';

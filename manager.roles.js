@@ -3,14 +3,14 @@ var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRunner = require('role.runner');
 
-var roleManager = {
+var managerRoles = {
     
-    creepCountTotal: 13,
+    creepCountTotal: 15,
     
     creepCount: {
         harvesters: 6,
         runners: 0,
-        builders: 1,
+        builders: 3,
         upgraders: 6
     },
     
@@ -22,10 +22,11 @@ var roleManager = {
             'upgrader'
         ],
         parts: {
-            harvester: [WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
-            runner: [CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE],
-            builder: [WORK,WORK,CARRY,CARRY,MOVE,MOVE],
-            upgrader: [WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
+            // harvester: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE],
+            harvester: [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
+            runner: [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
+            builder: [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
+            upgrader: [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
         }
     },
 
@@ -56,29 +57,21 @@ var roleManager = {
             for(i = 0; i < this.creepProps.roles.length; i++) {
                 var creepsAliveByRoles = _.filter(Game.creeps, (creep) => creep.memory.role == this.creepProps.roles[i]);
 
-                if(this.creepProps.roles[i] == 'harvester') {
-                    if(creepsAliveByRoles.length < this.creepCount.harvesters) {
+                if(this.creepProps.roles[i] == 'harvester' && creepsAliveByRoles.length < this.creepCount.harvesters) {
                         partsToSpawn = this.creepProps.parts.harvester;
                         roleToSpawn = this.creepProps.roles[i];
-                    }
                 }
-                else if(this.creepProps.roles[i] == 'runner') {
-                    if(creepsAliveByRoles.length < this.creepCount.runners) {
+                else if(this.creepProps.roles[i] == 'runner' && creepsAliveByRoles.length < this.creepCount.runners) {
                         partsToSpawn = this.creepProps.parts.runner;
                         roleToSpawn = this.creepProps.roles[i];
-                    }
                 }
-                else if(this.creepProps.roles[i] == 'builder') {
-                    if(creepsAliveByRoles.length < this.creepCount.builders) {
+                else if(this.creepProps.roles[i] == 'builder' && creepsAliveByRoles.length < this.creepCount.builders) {
                         partsToSpawn =this.creepProps.parts.builder;
                         roleToSpawn = this.creepProps.roles[i];
-                    }
                 }
-                else if(this.creepProps.roles[i] == 'upgrader') {
-                    if(creepsAliveByRoles.length < this.creepCount.upgraders) {
+                else if(this.creepProps.roles[i] == 'upgrader' && creepsAliveByRoles.length < this.creepCount.upgraders) {
                         partsToSpawn = this.creepProps.parts.upgrader;
                         roleToSpawn = this.creepProps.roles[i];
-                    }
                 }
             }
 
@@ -106,7 +99,7 @@ var roleManager = {
                 roleUpgrader.run(creep);
             }
         }
-    }
+    },
 };
 
-module.exports = roleManager;
+module.exports = managerRoles;

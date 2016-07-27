@@ -1,8 +1,8 @@
-var roleManager = require('role.manager'),
-	towerManager = require('tower.manager');
+var managerRoles = require('manager.roles');
+var managerTowers = require('manager.towers');
 
 module.exports.loop = function () {
-    roleManager.run();
-
-    towerManager.run();
+    managerRoles.run();
+    
+    managerTowers.run();
 }

@@ -5,15 +5,21 @@ var roleBuilder = {
     },
 
     _determineTask: function(creep) {
-        if(creep.memory.task == 'harvest' && creep.carry.energy != creep.carryCapacity) {
+        if(creep.memory.task == 'harvest' && creep.carry.energy < creep.carryCapacity) {
             this._harvest(creep);
         }
+        else {
+            this._buildStructures(creep);
+        }
+        
+        /*
         else if(creep.memory.task == 'build') {
             this._buildStructures(creep);
         }
         else {
             this._repairStructures(creep);
         }
+        */
     },
 
     _harvest: function(creep) {
@@ -25,28 +31,41 @@ var roleBuilder = {
     },
 
     _buildStructures: function(creep) {
-        var target = creep.room.find(FIND_CONSTRUCTION_SITES);
+        var targets = creep.room.find(FIND_CONSTRUCTION_SITES, {
+            filter: (structure) => {
+                return (//structure.structureType == STRUCTURE_STORAGE ||
+                        structure.structureType == STRUCTURE_EXTENSION ||
+                        structure.structureType == STRUCTURE_WALL ||
+                        structure.structureType == STRUCTURE_ROAD);
+            }
+        });
 
-        if(target.length && creep.carryCapacity != 0) {
-            if(creep.build(target[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target[0]);
+        if(targets.length && creep.carry.energy > 0) {
+            creep.memory.task = 'build';
+            
+            if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(targets[0]);
             }
         } else {
             creep.memory.task = 'harvest';
         }
     },
 
-     _repairStructures: function(creep) {
-        var target = creep.room.find(FIND_STRUCTURES, {
+    _repairStructures: function(creep) {
+        var targets = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.structureType == STRUCTURE_ROAD) && structure.hits < 2000;
+                return (
+                    structure.structureType == STRUCTURE_ROAD && structure.hits < 2000 ||
+                    structure.structureType == STRUCTURE_WALL && structure.hits < 50000);
             }
         });
 
-        if(creep.carry.energy != 0) {
-            if(target.length) {
-                if(creep.repair(target[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target[0]);
+        if(creep.carry.energy > 0) {
+            if(targets.length) {
+                creep.memory.task = 'repair';
+                
+                if(creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(targets[0]);
                 }
             } else {
                 creep.memory.task = 'build';

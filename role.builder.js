@@ -1,3 +1,5 @@
+var managerTasks = require('manager.tasks');
+
 var roleBuilder = {
 
     run: function(creep) {

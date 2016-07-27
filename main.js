@@ -1,5 +1,5 @@
-var managerRoles = require('manager.roles');
-var managerTowers = require('manager.towers');
+var managerRoles = require('manager.roles'),
+    managerTowers = require('manager.towers');
 
 module.exports.loop = function () {
     managerRoles.run();

@@ -1,7 +1,7 @@
-var roleHarvester = require('role.harvester');
-var roleUpgrader = require('role.upgrader');
-var roleBuilder = require('role.builder');
-var roleRunner = require('role.runner');
+var roleHarvester = require('role.harvester'),
+    roleUpgrader = require('role.upgrader'),
+    roleBuilder = require('role.builder'),
+    roleRunner = require('role.runner');
 
 var managerRoles = {
     

@@ -5,12 +5,12 @@ var roleHarvester = require('role.harvester'),
 
 var managerRoles = {
     
-    creepCountTotal: 15,
+    creepCountTotal: 13,
     
     creepCount: {
         harvesters: 6,
         runners: 0,
-        builders: 3,
+        builders: 1,
         upgraders: 6
     },
     
@@ -22,7 +22,6 @@ var managerRoles = {
             'upgrader'
         ],
         parts: {
-            // harvester: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE],
             harvester: [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
             runner: [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
             builder: [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],

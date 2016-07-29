@@ -2,15 +2,16 @@ var managerTasks = require('manager.tasks');
 
 var roleBuilder = {
 
-    run: function(creep) {
-        if(creep.memory.task == 'harvest') {
-            managerTasks.harvest(creep, 'build', 0);
-        }
-        else if(creep.memory.task == 'build') {
-            managerTasks.build(creep, 'upgrade');
-        }
-        else {
-            managerTasks.upgrade(creep);
+    determineTasks: function(creep) {
+        switch(creep.memory.task) {
+            case 'build':
+                managerTasks.build(creep, 'upgrade');
+                break;
+            case 'upgrade':
+                managerTasks.upgrade(creep);
+                break;
+            default:
+                managerTasks.harvest(creep, 'build', 0);
         }
     }
 };

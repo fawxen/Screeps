@@ -82,20 +82,15 @@ var managerRoles = {
         for(var name in Game.creeps) {
             var creep = Game.creeps[name];
 
-            if(creep.memory.role == 'harvester') {
-                roleHarvester.run(creep);
-            }
-            
-            if(creep.memory.role == 'runner') {
-                roleRunner.run(creep);
-            }
-
-            if(creep.memory.role == 'builder') {
-                roleBuilder.run(creep);
-            }
-
-            if(creep.memory.role == 'upgrader') {
-                roleUpgrader.run(creep);
+            switch(creep.memory.role) {
+                case 'builder':
+                    roleBuilder.determineTasks(creep);
+                    break;
+                case 'upgrader':
+                    roleUpgrader.determineTasks(creep);
+                    break;
+                default:
+                    roleHarvester.determineTasks(creep);
             }
         }
     },

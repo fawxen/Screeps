@@ -16,8 +16,9 @@ var managerTowers = {
             for(i = 0; i < towers.length; i++) {
                 var repairableStructure = towers[i].pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_ROAD && structure.hits < 2000 ||
-                                structure.structureType == STRUCTURE_WALL && structure.hits < 75000);
+                        return (structure.structureType == STRUCTURE_ROAD && structure.hits < 2000
+                                // structure.structureType == STRUCTURE_WALL && structure.hits < 75000
+                                );
                     }
                 });
                 

@@ -1,29 +1,34 @@
 var managerTowers = {
 
+    // Needs to be cleaned up
     run: function(creep) {
-        // Move this asap
         for(var name in Game.creeps) {
             var creep = Game.creeps[name];
         }
         
         var towers = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-            	return (structure.structureType == STRUCTURE_TOWER);
+                return (structure.structureType == STRUCTURE_TOWER);
             }
         });
 
         if(towers) {
-            var closestDamagedStructure = towers[0].pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => structure.hits < structure.hitsMax * .5 && structure.hitsMax == 5000
-            });
-            
-            var closestHostile = towers[0].pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+            for(i = 0; i < towers.length; i++) {
+                var repairableStructure = towers[i].pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_ROAD && structure.hits < 2000 ||
+                                structure.structureType == STRUCTURE_WALL && structure.hits < 75000);
+                    }
+                });
+                
+                var hostile = towers[i].pos.findClosestByRange(FIND_HOSTILE_CREEPS);
 
-            if(closestDamagedStructure && towers[0].energy > 500) {
-                towers[0].repair(closestDamagedStructure);
-            }
-            else if(closestHostile) {
-                towers[0].attack(closestHostile);
+                if(hostile) {
+                    towers[i].attack(hostile);
+                }
+                else if(repairableStructure && towers[i].energy > 500) {
+                    towers[i].repair(repairableStructure);
+                }
             }
         }
     }

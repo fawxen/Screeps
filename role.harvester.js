@@ -7,7 +7,7 @@ var roleHarvester = {
             managerTasks.harvest(creep, 'deposit', 1);
         }
         else if(creep.memory.task == 'deposit') {
-            managerTasks.build(creep, 'upgrade');
+            managerTasks.deposit(creep, 'upgrade');
         }
         else {
             managerTasks.upgrade(creep);
